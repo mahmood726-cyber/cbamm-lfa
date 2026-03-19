@@ -1,0 +1,38 @@
+Package: cbamm
+Type: Package
+Title: Collaborative Bayesian Adaptive Meta-Analysis Methods
+Version: 0.1.0
+Authors@R:
+    person("Mahmood", "Ahmad",
+           email = "mahmood726@gmail.com",
+           role = c("aut", "cre"))
+Description: Provides a comprehensive framework for evidence synthesis through three
+    primary innovations: (1) Population Transportability via entropy balancing
+    weights, (2) Sequential Evidence Monitoring with Trial Sequential Analysis (TSA)
+    boundaries, and (3) Automated decision support via a multi-persona synthesis
+    engine. Includes fast Bayesian random-effects models with Bayes Factors (BF10)
+    for hypothesis testing and evidence strength assessment.
+License: GPL (>= 3)
+Encoding: UTF-8
+LazyData: true
+URL: https://github.com/mahmood726-cyber/cbamm-lfa
+BugReports: https://github.com/mahmood726-cyber/cbamm-lfa/issues
+Depends: 
+    R (>= 3.5.0)
+Imports: 
+    stats,
+    graphics,
+    utils,
+    methods
+Suggests: 
+    metafor (>= 3.0.0),
+    ggplot2 (>= 3.3.0),
+    dplyr (>= 1.0.0),
+    gridExtra,
+    testthat (>= 3.0.0),
+    knitr,
+    rmarkdown,
+    coda
+VignetteBuilder: knitr
+RoxygenNote: 7.3.3
+Config/testthat/edition: 3

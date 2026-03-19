@@ -1,0 +1,9 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^data-raw$
+^cran-comments\.md$
+^renv$
+^renv\.lock$
+^\.Rprofile$
+^manuscript_PLOS_ONE\.md$
+^Words\.txt$

@@ -1,0 +1,5 @@
+# Create inst/WORDLIST with technical terms
+if (!dir.exists("inst")) dir.create("inst")
+cat("generalizability
+transportability
+", file = "inst/WORDLIST")

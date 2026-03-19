@@ -1,0 +1,102 @@
+---
+title: "CBAMM: An R Package for Collaborative Bayesian Adaptive Meta-Analysis Methods"
+author: "Mahmood Ahmad"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{CBAMM Tutorial}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+library(cbamm)
+```
+
+## Introduction
+
+The `cbamm` package provides a unified framework for modern meta-analysis, focusing on three key innovations:
+
+1.  **Sequential Evidence Monitoring:** Using Trial Sequential Analysis (TSA) to prevent false-positive conclusions in living systematic reviews.
+2.  **Population Transportability:** Using entropy balancing to weight meta-analytic evidence toward a target population's characteristics.
+3.  **Automated Decision Support:** Translating statistical results into clinical, statistical, and methodological "personas."
+
+## Case Study 1: Sequential Evidence Monitoring
+
+We demonstrate sequential monitoring using the classic **BCG Vaccine** dataset (13 studies on vaccine effectiveness against TB).
+
+```{r bcg_example}
+# Load BCG data
+data(bcg_data)
+
+# Run cumulative meta-analysis with TSA
+# We'll set an alternative effect of -0.5 (clinically meaningful RR = 0.6)
+cum_res <- cumulative_meta_analysis(
+  bcg_data,
+  order_by = "year",
+  tsa_effect_alt = -0.5,
+  tsa_alpha = 0.05,
+  tsa_beta = 0.20
+)
+
+# Print cumulative results with Multi-Persona Review
+print(cum_res)
+```
+
+In this analysis, the multi-persona review summarizes whether the evidence has reached sufficiency (using TSA boundaries) and stability (using the point where the estimate stop fluctuating).
+
+## Case Study 2: Population Transportability
+
+Meta-analysis results are often a "one-size-fits-all" estimate. `cbamm` allows us to weight studies based on how well they match a **target population**.
+
+Assume we have a target population that is older and has a higher BMI than the studies in our meta-analysis.
+
+```{r transport_example}
+# Load simulated meta-analysis data
+data(example_meta)
+
+# Define our target population characteristics
+target_pop <- list(
+  age_mean = 65,     # Older than the average study (approx. 55)
+  female_pct = 0.45,
+  bmi_mean = 31,     # Higher BMI than the average study (approx. 27)
+  charlson = 3.5     # Higher comorbidity
+)
+
+# Compute transport weights using entropy balancing
+weights <- compute_transport_weights(example_meta, target_pop)
+
+# The weights adjust the contribution of each study to match the target
+# Run weighted meta-analysis (simplified example using the weights)
+# In practice, we use these weights to adjust the 'precision' or 'vi'
+example_meta$weights <- weights
+weighted_res <- cbamm_fast(example_meta) # Note: Internal implementation uses weights if provided
+
+# Compare with original unweighted estimate
+unweighted_res <- cbamm_fast(example_meta)
+
+cat("Unweighted estimate: ", round(unweighted_res$b, 3), "\n")
+cat("Weighted (Transported) estimate: ", round(weighted_res$b, 3), "\n")
+```
+
+## Case Study 3: Bayesian Meta-Analysis with Bayes Factors
+
+`cbamm` provides a Gibbs sampler to estimate the posterior of the overall effect and heterogeneity.
+
+```{r bayesian_example}
+# Run Bayesian random-effects meta-analysis
+bayesian_res <- cbamm_bayesian(bcg_data, n_iter = 5000)
+
+# Print results including Bayes Factors (BF10)
+print(bayesian_res)
+```
+
+The **BF10** tells us the strength of evidence in favor of the effect hypothesis vs. the null. A BF10 > 10 is considered strong evidence.
+
+## Conclusion
+
+`cbamm` bridges the gap between complex statistical synthesis and clinical interpretation. By incorporating transportability and sequential monitoring, it provides a more robust and personalized evidence base for medical decision-making.
