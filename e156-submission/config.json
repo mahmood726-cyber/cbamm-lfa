@@ -3,7 +3,7 @@
   "slug": "cbamm-bayesian-adaptive-meta-analysis",
   "author": "Mahmood Ahmad",
   "date": "2026-03-27",
-  "path": "C:\\Projects\\LFA",
+  "path": "C:\\Models\\cbamm-lfa",
   "type": "methods",
   "primary_estimand": "Transported risk ratio (95% CI)",
   "certainty": "high",
