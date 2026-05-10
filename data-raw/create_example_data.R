@@ -45,6 +45,17 @@ example_meta <- data.frame(
 # Save to data/
 # In a real dev environment, we'd use usethis::use_data(example_meta, overwrite = TRUE)
 # Here we will just save it as RDA for the package to find
-save(example_meta, file = "C:/Users/user/OneDrive - NHS/Documents/LFA/data/example_meta.rda")
+script_path <- tryCatch(
+  normalizePath(sys.frame(1)$ofile, winslash = "/", mustWork = FALSE),
+  error = function(e) ""
+)
+if (!nzchar(script_path)) {
+  script_path <- normalizePath(file.path("data-raw", "create_example_data.R"), winslash = "/", mustWork = FALSE)
+}
+repo_root <- normalizePath(file.path(dirname(script_path), ".."), winslash = "/", mustWork = FALSE)
+out_dir <- file.path(repo_root, "data")
+dir.create(out_dir, showWarnings = FALSE, recursive = TRUE)
+
+save(example_meta, file = file.path(out_dir, "example_meta.rda"))
 
 message("Generated 30-study clinical dataset in data/example_meta.rda")
